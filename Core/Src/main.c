@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "global.h"
 
 /* USER CODE END Includes */
 
@@ -97,6 +98,13 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  SCH_Init();
+  TL_Init();
+  Button_Init();
+  fsm_auto_init();
+  HAL_TIM_Base_Start_IT(&htim2);
+  SCH_Add_Task(Button_Read, 0, 1);
+  SCH_Add_Task(fsm_auto_run, 0, 1);
 
   /* USER CODE END 2 */
 
@@ -107,12 +115,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_8));
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9));
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_7));
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6));
-	  HAL_Delay(100);
+    SCH_Dispatch_Tasks();
 
   }
   /* USER CODE END 3 */
@@ -333,6 +336,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM2) {
+    SCH_Update();
+  }
+}
 
 /* USER CODE END 4 */
 

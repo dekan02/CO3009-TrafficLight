@@ -101,9 +101,11 @@ int main(void)
   SCH_Init();
   TL_Init();
   Button_Init();
+  Timer_Init();
   fsm_auto_init();
   HAL_TIM_Base_Start_IT(&htim2);
   SCH_Add_Task(Button_Read, 0, 1);
+  SCH_Add_Task(Timer_Run, 0, 1);
   SCH_Add_Task(fsm_auto_run, 0, 1);
 
   /* USER CODE END 2 */

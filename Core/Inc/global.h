@@ -21,6 +21,14 @@
 #define TIME_MIN 1
 #define TIME_MAX 99
 
+#define SEC_TO_TICKS(s) ((uint32_t)(s) * 1000 / TICK_MS)
+
+#define TIMER_COUNT 4
+#define TIMER_AUTO 0
+#define TIMER_MANUAL 1
+#define TIMER_TUNING 2
+#define TIMER_LCD 3
+
 typedef enum {
     MODE_AUTO = 0,
     MODE_MANUAL,
@@ -46,6 +54,11 @@ uint32_t SCH_Add_Task(void (*pFunction)(void), uint32_t delay, uint32_t period);
 uint8_t SCH_Delete_Task(uint32_t taskId);
 void SCH_Update(void);
 void SCH_Dispatch_Tasks(void);
+
+void Timer_Init(void);
+void Timer_Set(uint8_t index, uint32_t ticks);
+void Timer_Run(void);
+uint8_t Timer_IsExpired(uint8_t index);
 
 void TL_Init(void);
 void TL_Set(uint8_t road, LightColor_t color);
